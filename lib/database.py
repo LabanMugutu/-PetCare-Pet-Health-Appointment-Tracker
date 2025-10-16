@@ -54,3 +54,17 @@ def create_tables() -> None:
         FOREIGN KEY (pet_id) REFERENCES pets(id)
     );
     """)
+     # Medical history table: vaccinations and treatments
+    CURSOR.execute("""
+    CREATE TABLE IF NOT EXISTS medical_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pet_id INTEGER,
+        record_type TEXT NOT NULL,
+        name TEXT,
+        date TEXT NOT NULL,
+        notes TEXT,
+        FOREIGN KEY (pet_id) REFERENCES pets(id)
+    );
+    """)
+
+    CONN.commit()
