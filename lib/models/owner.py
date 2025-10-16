@@ -55,3 +55,36 @@ class Owner:
         )
         CONN.commit()
         return self
+    def delete(self) -> None:
+        """
+        Delete the owner record from the DB.
+        Note: application logic should ensure pets are reassigned/deleted first.
+        """
+        if not self.id:
+            raise ValueError("Owner must have an id to delete.")
+        CURSOR.execute("DELETE FROM owners WHERE id = ?", (self.id,))
+        CONN.commit()
+
+    @classmethod
+    def find_by_id(cls, owner_id: int) -> Optional["Owner"]:
+        """Return Owner instance or None for given id."""
+        row = CURSOR.execute("SELECT id, name, contact FROM owners WHERE id = ?", (owner_id,)).fetchone()
+        if row:
+            return cls(id=row["id"], name=row["name"], contact=row["contact"])
+        return None
+
+    @classmethod
+    def all(cls) -> List["Owner"]:
+        """Return all owners as a list of Owner instances."""
+        rows = CURSOR.execute("SELECT id, name, contact FROM owners").fetchall()
+        return [cls(id=r["id"], name=r["name"], contact=r["contact"]) for r in rows]
+
+    @classmethod
+    def find_by_name(cls, name_query: str) -> List["Owner"]:
+        """
+        Search owners by partial name match using LIKE.
+        Demonstrates parameterized queries to avoid SQL injection.
+        """
+        like = f"%{name_query}%"
+        rows = CURSOR.execute("SELECT id, name, contact FROM owners WHERE name LIKE ?", (like,)).fetchall()
+        return [cls(id=r["id"], name=r["name"], contact=r["contact"]) for r in rows]
