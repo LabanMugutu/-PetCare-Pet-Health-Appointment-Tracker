@@ -22,3 +22,11 @@ def create_tables() -> None:
     - appointments
     - medical_history
     """
+    # Owners table
+    CURSOR.execute("""
+    CREATE TABLE IF NOT EXISTS owners (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        contact TEXT UNIQUE
+    );
+    """)
