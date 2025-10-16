@@ -30,3 +30,15 @@ def create_tables() -> None:
         contact TEXT UNIQUE
     );
     """)
+    # Pets table (each pet belongs to an owner)
+    CURSOR.execute("""
+    CREATE TABLE IF NOT EXISTS pets (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        species TEXT,
+        breed TEXT,
+        age INTEGER,
+        owner_id INTEGER,
+        FOREIGN KEY (owner_id) REFERENCES owners(id)
+    );
+    """)
