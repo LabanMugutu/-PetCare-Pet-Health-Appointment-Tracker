@@ -42,3 +42,15 @@ def create_tables() -> None:
         FOREIGN KEY (owner_id) REFERENCES owners(id)
     );
     """)
+     # Appointments table (each appointment -> pet)
+    CURSOR.execute("""
+    CREATE TABLE IF NOT EXISTS appointments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pet_id INTEGER,
+        date TEXT NOT NULL,
+        reason TEXT,
+        vet_name TEXT,
+        notes TEXT,
+        FOREIGN KEY (pet_id) REFERENCES pets(id)
+    );
+    """)
