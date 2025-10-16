@@ -38,3 +38,20 @@ class Owner:
         except sqlite3.IntegrityError as e:
             # Unique constraint violation for contact
             raise ValueError("Owner contact must be unique.") from e
+    def update(self, name: Optional[str] = None, contact: Optional[str] = None) -> "Owner":
+        """
+        Update this owner's fields in the DB.
+        Only non-None arguments are applied.
+        """
+        if name:
+            self.name = name
+        if contact:
+            self.contact = contact
+        if not self.id:
+            raise ValueError("Owner must have an id to update.")
+        CURSOR.execute(
+            "UPDATE owners SET name = ?, contact = ? WHERE id = ?",
+            (self.name, self.contact, self.id)
+        )
+        CONN.commit()
+        return self
