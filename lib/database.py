@@ -14,3 +14,11 @@ CONN = sqlite3.connect(DB_PATH, check_same_thread=False)
 # Row factory allows access by column name, e.g., row["id"]
 CONN.row_factory = sqlite3.Row
 CURSOR = CONN.cursor()
+def create_tables() -> None:
+    """
+    Create the four tables used by PetCare:
+    - owners
+    - pets
+    - appointments
+    - medical_history
+    """
