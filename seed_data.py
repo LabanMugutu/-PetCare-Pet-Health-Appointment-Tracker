@@ -14,3 +14,7 @@ from lib.models.owner import Owner
 from lib.models.pet import Pet
 from lib.models.appointment import Appointment
 from lib.models.medical_history import MedicalHistory
+def seed():
+    # Ensure tables exist
+    create_tables()
+
