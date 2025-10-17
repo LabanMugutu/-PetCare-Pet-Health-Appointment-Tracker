@@ -34,5 +34,19 @@ from lib.models.medical_history import MedicalHistory
                 reason="Spay follow-up", vet_name="Dr. Auma", notes="Stitches check").save()
 
     # Owner 2
+    brian = Owner(name="Brian Kim", contact="0710000002").save()
+    b1_p1 = Pet(name="Shadow", species="Dog", breed="German Shepherd", age=5, owner_id=brian.id).save()
+    b1_p2 = Pet(name="Goldie", species="Fish", breed="Goldfish", age=1, owner_id=brian.id).save()
+    b1_p3 = Pet(name="Coco", species="Bird", breed="Parrot", age=3, owner_id=brian.id).save()
+    Appointment(pet_id=b1_p1.id, date=(date.today() + timedelta(days=3)).isoformat(),
+                reason="Dental cleaning", vet_name="Dr. Mwende", notes="Anesthesia planned").save()
+    MedicalHistory(pet_id=b1_p1.id, record_type="treatment", name="Dental cleaning",
+                   date=(date.today() - timedelta(days=400)).isoformat(), notes="Routine").save()
+    Appointment(pet_id=b1_p3.id, date=(date.today() + timedelta(days=21)).isoformat(),
+                reason="Wing trim", vet_name="Dr. Auma", notes="Check behavior").save()
+    MedicalHistory(pet_id=b1_p3.id, record_type="vaccination", name="Polyomavirus",
+                   date=(date.today() - timedelta(days=200)).isoformat(), notes="Administered at clinic").save()
+
+    # Owner 3
 
 
