@@ -58,3 +58,8 @@ class Appointment:
         if row:
             return cls(id=row["id"], pet_id=row["pet_id"], date=row["date"], reason=row["reason"], vet_name=row["vet_name"], notes=row["notes"])
         return None
+    @classmethod
+    def find_by_pet(cls, pet_id: int) -> List["Appointment"]:
+        """Return all appointments for a pet (ordered DESC by date)."""
+        rows = CURSOR.execute("SELECT id, pet_id, date, reason, vet_name, notes FROM appointments WHERE pet_id = ? ORDER BY date DESC", (pet_id,)).fetchall()
+        return [cls(id=r["id"], pet_id=r["pet_id"], date=r["date"], reason=r["reason"], vet_name=r["vet_name"], notes=r["notes"]) for r in rows]
