@@ -11,7 +11,7 @@ from lib.models.medical_record import MedicalRecord
 
 def main_menu():
     """Displays the main menu and handles user commands."""
-    print("\n🐾 Welcome to PetCare — Pet Health & Appointment Tracker 🐾")
+    print("\n Welcome to PetCare — Pet Health & Appointment Tracker ")
     print("Type a command or 'help' to see options.\n")
 
     while True:
@@ -35,7 +35,7 @@ Commands:
             name = input("Owner name: ")
             contact = input("Contact: ")
             Owner(name, contact).save()
-            print("✅ Owner added successfully!")
+            print(" Owner added successfully!")
 
         elif command == "view_owners":
             owners = Owner.get_all()
@@ -49,7 +49,7 @@ Commands:
             breed = input("Breed: ")
             owner_id = int(input("Owner ID: "))
             Pet(name, age, species, breed, owner_id).save()
-            print("✅ Pet added successfully!")
+            print(" Pet added successfully!")
 
         elif command == "view_pets":
             pets = Pet.get_all()
@@ -63,7 +63,7 @@ Commands:
             vet = input("Vet name: ")
             notes = input("Notes: ")
             Appointment(pet_id, date, reason, vet, notes).save()
-            print("✅ Appointment added successfully!")
+            print(" Appointment added successfully!")
 
         elif command == "view_appts":
             pet_id = int(input("Pet ID: "))
@@ -77,7 +77,7 @@ Commands:
             treatment = input("Treatment: ")
             notes = input("Notes: ")
             MedicalRecord(pet_id, date, treatment, notes).save()
-            print("✅ Record added successfully!")
+            print(" Record added successfully!")
 
         elif command == "view_records":
             pet_id = int(input("Pet ID: "))
@@ -86,9 +86,9 @@ Commands:
                 print(f"{r.record_date} - {r.treatment} | {r.notes}")
 
         elif command == "exit":
-            print("👋 Goodbye!")
+            print(" Goodbye!")
             break
 
         else:
-            print("⚠️ Unknown command. Type 'help' for options.")
+            print(" Unknown command. Type 'help' for options.")
 
