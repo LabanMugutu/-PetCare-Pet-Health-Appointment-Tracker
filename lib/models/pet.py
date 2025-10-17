@@ -15,3 +15,9 @@ class Pet:
           - breed, age: optional
           - owner_id: foreign key to owners.id (may be None)
         """
+        self.id = id
+        self.name = name
+        self.species = species
+        self.breed = breed
+        self.age = age
+        self.owner_id = owner_id
