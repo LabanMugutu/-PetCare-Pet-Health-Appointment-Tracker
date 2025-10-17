@@ -63,3 +63,22 @@ class Appointment:
         """Return all appointments for a pet (ordered DESC by date)."""
         rows = CURSOR.execute("SELECT id, pet_id, date, reason, vet_name, notes FROM appointments WHERE pet_id = ? ORDER BY date DESC", (pet_id,)).fetchall()
         return [cls(id=r["id"], pet_id=r["pet_id"], date=r["date"], reason=r["reason"], vet_name=r["vet_name"], notes=r["notes"]) for r in rows]
+     @classmethod
+    def upcoming_for_pet(cls, pet_id: int, current_date: str) -> List["Appointment"]:
+        """Return appointments for a pet with date >= current_date ordered asc."""
+        rows = CURSOR.execute("SELECT id, pet_id, date, reason, vet_name, notes FROM appointments WHERE pet_id = ? AND date >= ? ORDER BY date ASC", (pet_id, current_date)).fetchall()
+        return [cls(id=r["id"], pet_id=r["pet_id"], date=r["date"], reason=r["reason"], vet_name=r["vet_name"], notes=r["notes"]) for r in rows]
+
+    @classmethod
+    def past_for_pet(cls, pet_id: int, current_date: str) -> List["Appointment"]:
+        """Return appointments for a pet with date < current_date ordered desc."""
+        rows = CURSOR.execute("SELECT id, pet_id, date, reason, vet_name, notes FROM appointments WHERE pet_id = ? AND date < ? ORDER BY date DESC", (pet_id, current_date)).fetchall()
+        return [cls(id=r["id"], pet_id=r["pet_id"], date=r["date"], reason=r["reason"], vet_name=r["vet_name"], notes=r["notes"]) for r in rows]
+
+    @classmethod
+    def next_appointment_for_pet(cls, pet_id: int, current_date: str) -> Optional[Tuple[int, str]]:
+        """Return tuple (id, date) for the next appointment for the pet, or None."""
+        row = CURSOR.execute("SELECT id, date FROM appointments WHERE pet_id = ? AND date >= ? ORDER BY date ASC LIMIT 1", (pet_id, current_date)).fetchone()
+        if row:
+            return (row["id"], row["date"])
+        return None
