@@ -48,5 +48,28 @@ from lib.models.medical_history import MedicalHistory
                    date=(date.today() - timedelta(days=200)).isoformat(), notes="Administered at clinic").save()
 
     # Owner 3
+    clara = Owner(name="Clara Otieno", contact="0710000003").save()
+    c1_p1 = Pet(name="Rex", species="Dog", breed="Mixed", age=6, owner_id=clara.id).save()
+    c1_p2 = Pet(name="Whisk", species="Cat", breed="Siamese", age=1, owner_id=clara.id).save()
+    Appointment(pet_id=c1_p1.id, date=(date.today() + timedelta(days=10)).isoformat(),
+                reason="Annual checkup", vet_name="Dr. Kilonzo", notes="Bring previous records").save()
+    MedicalHistory(pet_id=c1_p1.id, record_type="vaccination", name="Distemper",
+                   date=(date.today() - timedelta(days=500)).isoformat(), notes="Full course").save()
+    Appointment(pet_id=c1_p2.id, date=(date.today() - timedelta(days=2)).isoformat(),
+                reason="Injury check", vet_name="Dr. Mwende", notes="Front paw scratch").save()
+    MedicalHistory(pet_id=c1_p2.id, record_type="treatment", name="Stitch",
+                   date=(date.today() - timedelta(days=2)).isoformat(), notes="Local anesthetic").save()
+
+    # Print summary
+    print("=== Seed Complete ===")
+    print(f"Owners: {', '.join([alice.name, brian.name, clara.name])}")
+    print("Pets per owner:")
+    for owner in (alice, brian, clara):
+        pets = Pet.find_by_owner(owner.id)
+        pet_list = ", ".join([f"{p.name}({p.species})" for p in pets])
+        print(f" - {owner.name}: {pet_list}")
+
+if __name__ == "__main__":
+    seed()
 
 
