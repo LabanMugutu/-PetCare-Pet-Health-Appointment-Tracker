@@ -5,3 +5,4 @@ for upcoming/past appointments per pet and for owners.
 
 from typing import Optional, List, Tuple
 from lib.database import CURSOR, CONN
+class Appointment:
