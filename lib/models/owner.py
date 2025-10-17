@@ -82,9 +82,9 @@ class Owner:
     @classmethod
     def find_by_name(cls, name_query: str) -> List["Owner"]:
         """
-        Search owners by partial name match using LIKE.
+        Search owners by partial name match using LIKE.2
         Demonstrates parameterized queries to avoid SQL injection.
         """
         like = f"%{name_query}%"
         rows = CURSOR.execute("SELECT id, name, contact FROM owners WHERE name LIKE ?", (like,)).fetchall()
-        return [cls(id=r["id"], name=r["name"], contact=r["contact"]) for r in rows]
+        return [cls(id=r["id"], name=r["name"], contact=r["contact"]) for r in rows]5
