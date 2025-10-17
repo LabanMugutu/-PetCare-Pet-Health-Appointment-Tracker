@@ -1,70 +1,58 @@
-"""
-Database module.
-Provides a shared sqlite3 connection and a create_tables() function
-that creates the schema used by the models.
-"""
+# lib/database.py
+# ----------------------------------------
+# Handles database connection and table creation using sqlite3.
+# This file defines CURSOR and CONN used by all model classes.
+# ----------------------------------------
 
-import os
 import sqlite3
-# Allow overriding DB path with env var (useful in tests)
-DB_PATH = os.environ.get("PETCARE_DB", "db/database.db")
-os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-# Create a connection and cursor shared across modules
-CONN = sqlite3.connect(DB_PATH, check_same_thread=False)
-# Row factory allows access by column name, e.g., row["id"]
-CONN.row_factory = sqlite3.Row
+
+# Connect to SQLite database (creates one if it doesn't exist)
+CONN = sqlite3.connect('db/database.db')
 CURSOR = CONN.cursor()
-def create_tables() -> None:
-    """
-    Create the four tables used by PetCare:
-    - owners
-    - pets
-    - appointments
-    - medical_history
-    """
-    # Owners table
-    CURSOR.execute("""
-    CREATE TABLE IF NOT EXISTS owners (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        contact TEXT UNIQUE
-    );
-    """)
-    # Pets table (each pet belongs to an owner)
-    CURSOR.execute("""
-    CREATE TABLE IF NOT EXISTS pets (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        species TEXT,
-        breed TEXT,
-        age INTEGER,
-        owner_id INTEGER,
-        FOREIGN KEY (owner_id) REFERENCES owners(id)
-    );
-    """)
-     # Appointments table (each appointment -> pet)
-    CURSOR.execute("""
-    CREATE TABLE IF NOT EXISTS appointments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        pet_id INTEGER,
-        date TEXT NOT NULL,
-        reason TEXT,
-        vet_name TEXT,
-        notes TEXT,
-        FOREIGN KEY (pet_id) REFERENCES pets(id)
-    );
-    """)
-     # Medical history table: vaccinations and treatments
-    CURSOR.execute("""
-    CREATE TABLE IF NOT EXISTS medical_history (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        pet_id INTEGER,
-        record_type TEXT NOT NULL,
-        name TEXT,
-        date TEXT NOT NULL,
-        notes TEXT,
-        FOREIGN KEY (pet_id) REFERENCES pets(id)
-    );
-    """)
+
+def create_tables():
+    """Creates all necessary tables if they don't exist."""
+    CURSOR.execute('''
+        CREATE TABLE IF NOT EXISTS owners (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            contact TEXT NOT NULL
+        )
+    ''')
+
+    CURSOR.execute('''
+        CREATE TABLE IF NOT EXISTS pets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            age INTEGER,
+            species TEXT,
+            breed TEXT,
+            owner_id INTEGER,
+            FOREIGN KEY (owner_id) REFERENCES owners(id)
+        )
+    ''')
+
+    CURSOR.execute('''
+        CREATE TABLE IF NOT EXISTS appointments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pet_id INTEGER,
+            date TEXT,
+            reason TEXT,
+            vet_name TEXT,
+            notes TEXT,
+            FOREIGN KEY (pet_id) REFERENCES pets(id)
+        )
+    ''')
+
+    CURSOR.execute('''
+        CREATE TABLE IF NOT EXISTS medical_records (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pet_id INTEGER,
+            record_date TEXT,
+            treatment TEXT,
+            notes TEXT,
+            FOREIGN KEY (pet_id) REFERENCES pets(id)
+        )
+    ''')
 
     CONN.commit()
