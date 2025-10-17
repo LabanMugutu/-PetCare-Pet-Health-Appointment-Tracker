@@ -20,3 +20,16 @@ class MedicalHistory:
         self.name = name
         self.date = date
         self.notes = notes
+
+    def save(self) -> "MedicalHistory":
+        """Insert a new medical record."""
+        if not self.pet_id or not self.record_type or not self.date:
+            raise ValueError("pet_id, record_type and date are required.")
+        CURSOR.execute(
+            "INSERT INTO medical_history (pet_id, record_type, name, date, notes) VALUES (?, ?, ?, ?, ?)",
+            (self.pet_id, self.record_type, self.name, self.date, self.notes)
+        )
+        CONN.commit()
+        self.id = CURSOR.lastrowid
+        return self
+
